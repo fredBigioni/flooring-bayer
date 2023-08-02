@@ -204,7 +204,7 @@ export const SideMenu = ({ isOpen, onClose, children, setImageSelected }) => {
 
     return (
         <Drawer anchor="right" open={isOpen} onClose={onClose}>
-            <div style={{ width: '255px', marginTop: '20%' }}>
+            <div style={{ width: '255px', marginTop: '5%' }}>
                 <div className="buscador" style={{ margin: '10px' }}>
                     <TextField
                         placeholder="Buscar..."
@@ -224,7 +224,7 @@ export const SideMenu = ({ isOpen, onClose, children, setImageSelected }) => {
                         }}
                     />
                 </div>
-                <List style={{ marginTop: '20%' }}>
+                <List style={{ marginTop: '10%' }}>
                     {filteredListItemData.map((parentItem, parentIndex) => (
                         <React.Fragment key={parentIndex}>
                             <ListItem
@@ -258,7 +258,7 @@ export const SideMenu = ({ isOpen, onClose, children, setImageSelected }) => {
                                 )}
                             </ListItem>
                             {selectedParentItem === parentItem && parentItem.salas.length > 0 && (
-                                <List style={{ marginLeft: '20px', background: '#F5EEF8' }}>
+                                <List style={{ marginLeft: '20px' }}>
                                     {parentItem.salas.map((item, childIndex) => (
 
                                         <ListItem

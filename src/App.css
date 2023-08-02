@@ -55,7 +55,7 @@
   max-height: 95%;
   top: 0;
   left: 0;
-  border: 1px solid red;
+  /* border: 1px solid red; */
   margin: 1%;
 }
 
@@ -99,8 +99,8 @@
 
 /* Estilo para el elemento con clase .css-9eykmw-MuiPaper-root-MuiDrawer-paper */
 .css-9eykmw-MuiPaper-root-MuiDrawer-paper {
-  box-shadow: none !important;
-  /* 0px 0px 10px -5px rgba(0, 0, 0, 0.2), 0px 16px 24px 2px rgba(0, 0, 0, 0.14), 0px 6px 30px 5px rgba(0, 0, 0, 0.12) !important; */
+  /* box-shadow: none !important; */
+  box-shadow: 0px 0px 10px -5px rgba(0, 0, 0, 0.2), 0px 16px 24px 2px rgba(0, 0, 0, 0.14), 0px 6px 30px 5px rgba(0, 0, 0, 0.12) !important;
 }
 
 
@@ -132,7 +132,7 @@
 .css-9eykmw-MuiPaper-root-MuiDrawer-paper {
   position: relative;
   padding-left: 1px;
-  background-color: rgba(245, 238, 248, 0.4) !important;
+  /* background-color: rgba(245, 238, 248, 0.4) !important; */
 }
 
 /* Borde resaltado */
@@ -140,10 +140,10 @@
   content: '';
   position: absolute;
   left: 0;
-  top: 10%;
+  top: 0;
   /* Ajusta el valor del top según el alto del borde que deseas */
-  height: 90%;
+  height: 100%;
   /* Ajusta el valor del alto del borde que deseas */
   width: 1px;
-  background-color: #de0043;
+  /* background-color: #de0043; */
 }

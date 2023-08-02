@@ -7,6 +7,9 @@ import { SideMenu } from './components/sidemenu';
 import './App.css';
 import { Carousel } from './components/carousel';
 import Logo from './images/bayer.png';
+import FooterLogo from './images/bayer-completo.png'; // Agrega la ruta de la imagen del logo del footer
+
+
 
 const theme = createTheme({
   palette: {
@@ -73,7 +76,7 @@ const App = () => {
 
   return (
     <ThemeProvider theme={theme} style={{ backgroundColor: 'white' }}>
-      <div className='navbar'>
+      {/* <div className='navbar'>
         <Grid container style={{ height: '100%', alignItems: 'center' }}>
           <Grid item xs={6} sm={3} style={{ height: '100%' }}>
             <img src={Logo} alt="Logo" style={{ height: '80%', padding: '3%' }} />
@@ -81,11 +84,12 @@ const App = () => {
           <Grid item xs={6} sm={9} style={{ display: 'flex', justifyContent: 'flex-end', height: '100%' }}>
           </Grid>
         </Grid>
-      </div>
+      </div> */}
 
-      <Grid container style={{ height: '90vh', backgroundColor: '#f5f5f5' }}>
+      <Grid container style={{ height: '100vh', backgroundColor: '#f5f5f5' }}>
         <Grid item xs={9}>
           <div id='contenedorImages' className='rootContainer' style={{ width: '100%', height: '100%' }}>
+          <img src={FooterLogo} alt="Footer Logo" style={{ position: 'absolute', left: '10px', bottom: '10px', height: '50px' }} />
           </div>
         </Grid>
         <Grid item xs={3}>

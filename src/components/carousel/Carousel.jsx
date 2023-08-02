@@ -82,7 +82,7 @@ export const Carousel = () => {
     <>
       <div className="bodyContent">
         <Grid container justifyContent="" alignItems="center" style={{ height: '95vh', backgroundColor: 'rgb(245, 245, 245, 0.8)' }}>
-          <Grid item xs={12} textAlign="center" style={{ border: '1px solid blue', height: '90vh' }}>
+          <Grid item xs={12} textAlign="center" style={{  height: '90vh' }}>
             <div className="root">
               <div className="content">
                 <div>
