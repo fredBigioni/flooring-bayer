@@ -24,7 +24,7 @@ export const Carousel = () => {
 
   useEffect(() => {
     // Llama a getAllMedia y luego a transform
-    debugger;
+    
     // if (window.cordova) {
       getAllMedia().then((arrayObejto) => {
         console.log("Operaciones completadas, ahora se llama a transform");
@@ -44,10 +44,10 @@ export const Carousel = () => {
     return new Promise(async (resolve, reject) => {
       // document.addEventListener('deviceready', async () => {
         try {
-          debugger;
+          
           const response = await fetch(urlBack + 'Publicity/get-all', { method: 'GET' });
 
-          debugger;
+          
           if (!response.ok) {
             console.error(`Error al descargar los archivos: ${response.statusText}`);
             return;
@@ -78,49 +78,49 @@ export const Carousel = () => {
 
           let arrayObejto = [];
 
-          await Promise.all(
-            arrayObject.map(
-              async (file) =>
-                new Promise((resolve, reject) => {
-                  console.log(`file:`);
-                  console.log(file);
-                  window.resolveLocalFileSystemURL(
-                    targetDirectory,
-                    function (dirEntry) {
-                      if (file.src !== '') {
-                        dirEntry.getFile(
-                          file.src,
-                          { create: false },
-                          function (fileEntry) {
-                            const imageUrl = fileEntry.toURL();
-                            console.log(`imgUrl : ${imageUrl}`);
-                            arrayObejto.push({
-                              idParent: file.id,
-                              src: imageUrl,
-                              type: file.type,
-                              alt: file.alt
-                            });
-                            resolve();
-                          },
-                          function (error) {
-                            console.error('Error al obtener el archivo:', error);
-                            reject(error);
-                          }
-                        );
-                      } else {
-                        resolve();
-                      }
-                    },
-                    function (error) {
-                      console.error('Error al resolver el directorio de destino:', error);
-                      reject(error);
-                    }
-                  );
-                })
-            )
-          );
+          // await Promise.all(
+          //   arrayObject.map(
+          //     async (file) =>
+          //       new Promise((resolve, reject) => {
+          //         console.log(`file:`);
+          //         console.log(file);
+          //         window.resolveLocalFileSystemURL(
+          //           targetDirectory,
+          //           function (dirEntry) {
+          //             if (file.src !== '') {
+          //               dirEntry.getFile(
+          //                 file.src,
+          //                 { create: false },
+          //                 function (fileEntry) {
+          //                   const imageUrl = fileEntry.toURL();
+          //                   console.log(`imgUrl : ${imageUrl}`);
+          //                   arrayObejto.push({
+          //                     idParent: file.id,
+          //                     src: imageUrl,
+          //                     type: file.type,
+          //                     alt: file.alt
+          //                   });
+          //                   resolve();
+          //                 },
+          //                 function (error) {
+          //                   console.error('Error al obtener el archivo:', error);
+          //                   reject(error);
+          //                 }
+          //               );
+          //             } else {
+          //               resolve();
+          //             }
+          //           },
+          //           function (error) {
+          //             console.error('Error al resolver el directorio de destino:', error);
+          //             reject(error);
+          //           }
+          //         );
+          //       })
+          //   )
+          // );
 
-          resolve(arrayObejto); // Resuelve la promesa después de que todo está completo
+          // resolve(arrayObejto); // Resuelve la promesa después de que todo está completo
 
         } catch (error) {
           console.error(`Error al descargar los archivos: ${error.message}`);
