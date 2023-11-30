@@ -15,6 +15,7 @@ import { HubConnection, HubConnectionBuilder } from "@microsoft/signalr";
 import { notification } from "antd";
 import apiConfig from './config';
 import Modal from './components/modal/Modal';
+import './index.css';
 
 const App = () => {
   // Estado para almacenar la imagen seleccionada
@@ -53,7 +54,7 @@ const App = () => {
     // if (imageSelected !== '' && imageSelected !== undefined)
     getImageForItem();
     // else
-    //   setImageSelected('./images/entrada-pb-vacio.png');
+    //   setImageSelected('./images/entrada-pb-vacio.png');    
 
   }, [imageSelected])
 
@@ -136,6 +137,7 @@ const App = () => {
       // setDownloadFiles(false);
     }
   }, [downloadFiles])
+
 
 
   const handleDownloadClickWeb = async () => {
@@ -515,7 +517,15 @@ const App = () => {
     setModalAbierto(false);
   };
 
+  const getLogo = () => {
+    
+    if (imageSelected === '')
+      return 'logoImageInicial'
+    else if (imageSelected?.toLowerCase().includes('mapageneral'))
+      return 'logoImageInicial'
 
+    return 'logoImage'
+  }
 
   return (
     <div
@@ -535,11 +545,13 @@ const App = () => {
         {!carouselVisible && (
           <>
             <section className="item-0">
-              {/* <div id="contenedorImages" className={`${classNameSelected} ${'show'}`}></div> */}
-              {/* <div id='testigo'>
-              <Button type='button' primary onClick={() => handleDeleteClick()}>Delete</Button>
-            </div> */}
-              <div id="contenedorImages" className='rootContainerMapaGeneral show'></div>
+              <div id="contenedorImages" className='rootContainerMapaGeneral show'>
+                <div className={rightLogo ? 'logoContainerDerecha' : 'logoContainerIzquierda'}>
+                  <img className={getLogo()} src="./bayer.png" alt="Logo" />
+                </div>
+              </div>
+              <div className="otroRectangulo"></div>
+              <div className="rectanguloTransversal"></div>
             </section>
             <section className='item-1'>
               <SideMenu
@@ -551,8 +563,7 @@ const App = () => {
               />
             </section>
           </>
-        )
-        }
+        )}
       </div >
 
       <Modal
