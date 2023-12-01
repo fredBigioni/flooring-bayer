@@ -84,12 +84,6 @@ const listItemData = [
                 rightSide: false
             },
             {
-                text: 'Sala Tucumán copia',
-                image: SalaTucumanCopia,
-                selected: false,
-                rightSide: false
-            },
-            {
                 text: 'Sala Entre Rios',
                 image: SalaEntreRios,
                 selected: false,
@@ -271,7 +265,7 @@ export const SideMenu = ({ isOpen, onClose, children, setImageSelected, setRight
     const [filteredListItemData, setFilteredListItemData] = useState(listItemData);
     const [selectedParentItem, setSelectedParentItem] = useState(null);
     const [desplegado, setDesplegado] = useState(false);
-
+    const [imagenSeleccionada, setImagenSeleccionada] = useState(null);
 
     useEffect(() => {
         // Utilizamos el método find para encontrar el elemento con selected: true y obtener su propiedad image
@@ -329,9 +323,11 @@ export const SideMenu = ({ isOpen, onClose, children, setImageSelected, setRight
         //     setSelectedItem(null);
         // } else {
         // Si seleccionamos un nuevo ítem, lo establecemos como ítem seleccionado
+
         setImagePressed(item);
         setSelectedParentItem(parentItem);
         setSelectedItem(item);
+        setImagenSeleccionada(item);
 
         if (item === null && selectedParentItem?.planta === parentItem?.planta) {
             //Con esto vuelvo a contraer el menu            
@@ -364,13 +360,42 @@ export const SideMenu = ({ isOpen, onClose, children, setImageSelected, setRight
         setIsSideMenuOpen(false);
     };
 
+    const paletteColors = {
+        parentColor: '#10384F',
+        parentColorHover: '#FFFFFF',
+        parentBackgroundColorHover: '#FF3162',
+        pbAlaIzquierda: '#0091DF',
+        pbAlaDerecha: '#66B512',
+        p1AlaIzquierda: '#0091DF',
+        p1AlaDerecha: '#D30F4B',
+    }
+
+    const getCurrentColor = (rightSide, planta, text) => {
+
+        if (text.toLowerCase() === 'mapa general')
+            return paletteColors.parentColor;
+
+        if (planta.toLowerCase() === 'planta baja') {
+            if (rightSide)
+                return paletteColors.pbAlaDerecha;
+
+            return paletteColors.pbAlaIzquierda;
+        }
+        else if (planta.toLowerCase() === 'primer piso') {
+            if (rightSide)
+                return paletteColors.p1AlaDerecha;
+
+            return paletteColors.p1AlaIzquierda;
+        }
+
+    }
     return (
         // <Drawer anchor="right" open={isOpen} onClose={onClose}>
-        <div 
+        <div
         // style={{ width: '280px', marginTop: '5%' }}
         >
-            <div className="buscador" 
-            style={{ margin: '5%' }}>
+            <div className="buscador"
+                style={{ margin: '5%' }}>
                 <TextField
                     placeholder="Buscar..."
                     value={searchQuery}
@@ -378,7 +403,7 @@ export const SideMenu = ({ isOpen, onClose, children, setImageSelected, setRight
                     variant="outlined"
                     size="small"
                     inputProps={{
-                        style: { height: '98%',width: '100%' },
+                        style: { height: '98%', width: '100%' },
                     }}
                     InputProps={{
                         endAdornment: (
@@ -399,22 +424,25 @@ export const SideMenu = ({ isOpen, onClose, children, setImageSelected, setRight
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'space-between',
-                                fontSize: '16px',
-                                fontStyle: 'oblique',
-                                color: '#de0043',
+                                lineHeight: '2rem',
+                                fontSize: '1.4em',
+                                // fontStyle: 'oblique',
+                                color: selectedParentItem === parentItem ? paletteColors.parentColorHover : paletteColors.parentColor, //'#de0043',
                                 fontWeight: 'bold',
                                 paddingLeft: '10px',
-                                background: selectedParentItem === parentItem ? '#D7BDE2' : 'transparent',
+                                background: selectedParentItem === parentItem ? paletteColors.parentBackgroundColorHover : 'transparent',
                             }}
                         >
+                            {/* <h2> */}
                             {parentItem.planta}
+                            {/* </h2> */}
                             {parentItem.salas.length > 0 && (
                                 <div
                                     style={{
-                                        fontSize: '18px',
+                                        // fontSize: '18px',
                                         width: '20px',
                                         textAlign: 'center',
-                                        color: '#de0043',
+                                        color: paletteColors.parentColor, //'#de0043',
                                         pointerEvents: 'none',
                                     }}
                                 >
@@ -438,15 +466,17 @@ export const SideMenu = ({ isOpen, onClose, children, setImageSelected, setRight
                                         button
                                         onClick={() => handleToggleChildren(parentItem, item)}
                                         style={{
-                                            fontSize: '15px',
+                                            fontSize: '1em',
                                             lineHeight: '2rem',
                                             listStyle: 'none',
-                                            fontStyle: 'oblique',
-                                            color: '#de0043',
+                                            // fontStyle: 'oblique',
+                                            color: getCurrentColor(item.rightSide, parentItem.planta, item.text),
                                             background: selectedItem === item ? '#ffbece' : 'transparent',
                                         }}
                                     >
+
                                         {item.text}
+
                                     </li>
                                     // </ListItem>
                                 ))}

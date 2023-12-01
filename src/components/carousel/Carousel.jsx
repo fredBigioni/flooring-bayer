@@ -3,6 +3,7 @@ import { Button, Card, CardMedia, Grid, Typography } from '@mui/material';
 import LeftIcon from '@material-ui/icons/ChevronLeft';
 import RightIcon from '@material-ui/icons/ChevronRight';
 import { notification } from "antd";
+import apiConfig from '../../config';
 
 export const Carousel = () => {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -24,60 +25,60 @@ export const Carousel = () => {
 
   useEffect(() => {
     // Llama a getAllMedia y luego a transform
-    debugger;
+
     // if (window.cordova) {
-      getAllMedia().then((arrayObejto) => {
-        console.log("Operaciones completadas, ahora se llama a transform");
-        transform(arrayObejto);
-      });
+    getAllMedia().then((arrayObejto) => {
+      console.log("Operaciones completadas, ahora se llama a transform");
+      transform(arrayObejto);
+    });
     // }
     // else{
     //   alert("no estoy en cordova")
     // }
     // getAllMediaImages();
   }, []);
-  const urlBase = 'https://home.solutica.com.ar:883/MapasBack/';
-  // const urlBase = 'https://localhost:5109/';
-  const urlBack = urlBase + 'api/';
+  const urlBase = apiConfig.urlBase;
+  const urlBack = apiConfig.urlBack;
 
   const getAllMedia = async () => {
     return new Promise(async (resolve, reject) => {
       // document.addEventListener('deviceready', async () => {
-        try {
-          debugger;
-          const response = await fetch(urlBack + 'Publicity/get-all', { method: 'GET' });
+      try {
 
-          debugger;
-          if (!response.ok) {
-            console.error(`Error al descargar los archivos: ${response.statusText}`);
-            return;
-          }
+        const response = await fetch(urlBack + 'Publicity/get-all', { method: 'GET' });
 
-          const fileList = await response.json();
-          let arrayObject = [];
-          let i = 1;
 
-          await Promise.all(
-            fileList.map(async (fileInfo) => {
-              arrayObject.push({
-                id: i,
-                src: fileInfo.fileName,
-                type: fileInfo.contentType.includes('image') ? 'image' : 'video',
-                alt: ''
-              });
+        if (!response.ok) {
+          console.error(`Error al descargar los archivos: ${response.statusText}`);
+          return;
+        }
 
-              i++;
-            })
-          );
+        const fileList = await response.json();
+        let arrayObject = [];
+        let i = 1;
 
-          setAllItems(arrayObject);
-          console.log(`All Items:`);
-          console.log(arrayObject);
+        await Promise.all(
+          fileList.map(async (fileInfo) => {
+            arrayObject.push({
+              id: i,
+              src: fileInfo.fileName,
+              type: fileInfo.contentType.includes('image') ? 'image' : 'video',
+              alt: ''
+            });
 
-          const targetDirectory = 'file:///storage/emulated/0/Download/';
+            i++;
+          })
+        );
 
-          let arrayObejto = [];
+        setAllItems(arrayObject);
+        console.log(`All Items:`);
+        console.log(arrayObject);
 
+        const targetDirectory = 'file:///storage/emulated/0/Download/';
+
+        let arrayObejto = [];
+
+        if (window.cordova) {
           await Promise.all(
             arrayObject.map(
               async (file) =>
@@ -121,11 +122,11 @@ export const Carousel = () => {
           );
 
           resolve(arrayObejto); // Resuelve la promesa después de que todo está completo
-
-        } catch (error) {
-          console.error(`Error al descargar los archivos: ${error.message}`);
-          reject(error);
         }
+      } catch (error) {
+        console.error(`Error al descargar los archivos: ${error.message}`);
+        reject(error);
+      }
       // });
     });
   };

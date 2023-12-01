@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
@@ -12,24 +12,11 @@ import pba from './images/PlantaBaja/PB-AlaA.png';
 import axios from 'axios';
 import { Notify } from './components/notification';
 import { HubConnection, HubConnectionBuilder } from "@microsoft/signalr";
-// import { Button, Input } from '@mui/material';
 import { notification } from "antd";
-
-
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: '#f4a460',
-    },
-    secondary: {
-      main: '#d2b48c',
-    },
-    background: {
-      default: '#f5f5f5',
-      paper: '#ffffff',
-    },
-  },
-});
+import apiConfig from './config';
+import Modal from './components/modal/Modal';
+import './index.css';
+import { InactivityRedirect } from './components/inactivityredirect';
 
 const App = () => {
   // Estado para almacenar la imagen seleccionada
@@ -68,7 +55,7 @@ const App = () => {
     // if (imageSelected !== '' && imageSelected !== undefined)
     getImageForItem();
     // else
-    //   setImageSelected('./images/entrada-pb-vacio.png');
+    //   setImageSelected('./images/entrada-pb-vacio.png');    
 
   }, [imageSelected])
 
@@ -104,54 +91,16 @@ const App = () => {
       setImageOpacity(1);
       container.style.backgroundImage = `url(${nuevaRutaDeImagen})`;
 
-      //   }, 1300);
-
-      //   container.style.backgroundImage = `url(${pba})`;
-
-      //   // container.style.opacity = '0'; /* Inicialmente la imagen es invisible */
-      //   // container.style.transition = 'opacity 0.5s ease';
-      // }, 300);
-
-
-      // Luego de cambiar la imagen, establece la opacidad a 1      
     }
   };
 
-  // const Test = async () => {
-  //   try {
-  //     const connection = new signalR.HubConnectionBuilder()
-  //       .withUrl('https://localhost:5109/notificationHub')
-  //       .configureLogging(signalR.LogLevel.Information)
-  //       .build();
-
-  //     connection.on('ReceiveNotification', (message) => {
-  //       // setNotifications(prevNotifications => [...prevNotifications, message]);
-  //       console.log("mensaje recibido: ", message);
-  //     });
-
-  //     await connection.start();
-  //     await connection.invoke("SendNotification", "Hola como estas");
-  //     // connection.start().then(() => {
-  //     //     console.log('SignalR connected');
-  //     // }).catch(err => console.error(err));
-
-
-  //     // return () => {
-  //     //     connection.stop().then(() => console.log('SignalR disconnected'));
-  //     // };
-  //   }
-  //   catch (e) {
-  //     console.log(e);
-  //   }
-  // }
   const [connection, setConnection] = useState(null);
   const [inputText, setInputText] = useState("");
   const [downloadFiles, setDownloadFiles] = useState(true);
-  const urlBase = 'https://home.solutica.com.ar:883/MapasBack/';
-  // const urlBase = 'https://localhost:5109/';
-  const urlBack = urlBase + 'api/';
 
-  // con este hook instanciamos el notification-hub
+  const urlBase = apiConfig.urlBase;
+  const urlBack = apiConfig.urlBack;
+
   useEffect(() => {
     const connect = new HubConnectionBuilder()
       .withUrl(urlBase + "notification-hub")
@@ -492,30 +441,30 @@ const App = () => {
                 });
               }
             });
-              // Obtener el archivo
-              // dirEntry.getFile(fileName, { create: false }, function (fileEntry) {
-              //   // Eliminar el archivo
-              //   fileEntry.remove(function () {
-              //     console.log('Archivo eliminado con éxito.');
-              //     notification.open({
-              //       message: "Success",
-              //       description: 'Archivo eliminado con éxito.',
-              //     });
-              //   }, function (error) {
-              //     console.error('Error al eliminar el archivo:', error);
-              //     notification.open({
-              //       message: "Error",
-              //       description: 'Error al eliminar el archivo: ' + error,
-              //     });
-              //   });
-              // }, function (error) {
-              //   console.error('Error al obtener el archivo:', error);
-              //   notification.open({
-              //     message: "Error",
-              //     description: 'Error al obtener el archivo: ' + error,
-              //   });
-              // });
-            }, function (error) {
+            // Obtener el archivo
+            // dirEntry.getFile(fileName, { create: false }, function (fileEntry) {
+            //   // Eliminar el archivo
+            //   fileEntry.remove(function () {
+            //     console.log('Archivo eliminado con éxito.');
+            //     notification.open({
+            //       message: "Success",
+            //       description: 'Archivo eliminado con éxito.',
+            //     });
+            //   }, function (error) {
+            //     console.error('Error al eliminar el archivo:', error);
+            //     notification.open({
+            //       message: "Error",
+            //       description: 'Error al eliminar el archivo: ' + error,
+            //     });
+            //   });
+            // }, function (error) {
+            //   console.error('Error al obtener el archivo:', error);
+            //   notification.open({
+            //     message: "Error",
+            //     description: 'Error al obtener el archivo: ' + error,
+            //   });
+            // });
+          }, function (error) {
             console.error('Error al resolver el directorio de destino:', error);
             notification.open({
               message: "Error",
@@ -534,41 +483,117 @@ const App = () => {
     }
   };
 
+  const touchRef = useRef(null);
+  const temporizadorRef = useRef(null);
+  const [modalAbierto, setModalAbierto] = useState(false);
+  const [mapaGeneralSelected, setMapaGeneralSelected] = useState(false);
+
+  const handleTouchStart = (event) => {
+    const touch = event.touches[0];
+    const x = touch.clientX;
+    const y = touch.clientY;
+
+    const enZonaSuperiorIzquierda = x < 100 && y < 100;
+
+    if (enZonaSuperiorIzquierda) {
+      temporizadorRef.current = setTimeout(() => {
+        // Abre el modal cuando se mantiene presionado por el tiempo determinado
+        setModalAbierto(true);
+      }, 1000); // 1000 milisegundos (1 segundo)
+    }
+  };
+
+  const handleTouchEnd = () => {
+    // Detiene el temporizador cuando se deja de mantener presionado
+    clearTimeout(temporizadorRef.current);
+  };
+
+
+
+  const handleInicioSesion = (event) => {
+    // Lógica de inicio de sesión (puedes implementar tu propia lógica aquí)
+    event.preventDefault();
+    // Aquí puedes manejar la lógica de inicio de sesión
+    console.log('Iniciar sesión...');
+    setModalAbierto(false);
+  };
+
+  const getStyle = () => {
+
+    if (imageSelected === '') {
+      return { width: '98%', margin: '1%' };
+    }
+
+    else if (imageSelected?.toLowerCase().includes('mapageneral')) {
+      return { width: '98%', margin: '1%' };
+    }
+
+    return { width: '80%', margin: '1% 1% 1% 14%' };
+  }
+
+  const getLogo = () => {
+
+    if (imageSelected === '') {
+      return 'logoImageInicial'
+    }
+
+    else if (imageSelected?.toLowerCase().includes('mapageneral')) {
+      return 'logoImageInicial'
+    }
+
+    return 'logoImage'
+  }
+
   return (
-    // <ThemeProvider theme={theme}
-    // style={{ backgroundColor: 'white' }}
-    // >
+    <div
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
+      onTouchCancel={handleTouchEnd}
+      ref={touchRef}
+      style={{ touchAction: 'manipulation' }}
+    >
 
-    <div className="container">
-      {carouselVisible && (
-        <div className="item-carousel">
-          <Carousel style={{ zIndex: '2' }} />
-        </div>
-      )}
-      {!carouselVisible && (
-        <>
-          <section className="item-0">
-            {/* <div id="contenedorImages" className={`${classNameSelected} ${'show'}`}></div> */}
-            {/* <div id='testigo'>
-              <Button type='button' primary onClick={() => handleDeleteClick()}>Delete</Button>
-            </div> */}
-            <div id="contenedorImages" className='rootContainerMapaGeneral show'></div>
-          </section>
-          <section className='item-1'>
-            <SideMenu
-              isOpen={!carouselVisible}
-              selectedItem={selectedItem}
-              onItemSelected={handleItemSelected}
-              setImageSelected={setImageSelected}// Pasamos la función que maneja la selección de elementos
-              setRightLogo={setRightLogo}
+      <div className="container">
+        {carouselVisible && (
+          <div className="item-carousel">
+            <Carousel style={{ zIndex: '2' }} />
+          </div>
+        )}
+        {!carouselVisible && (
+          <>
+            <InactivityRedirect
+              getBackToCarousel={setCarouselVisible}
             />
-          </section>
-        </>
-      )
-      }
-    </div >
+            <section className="item-0">
+              <div id="contenedorImages" className='rootContainerMapaGeneral show'
+                style={getStyle()}
+              >
+                <div className={rightLogo ? 'logoContainerDerecha' : 'logoContainerIzquierda'}>
+                  <img className={getLogo()} src="./bayer.png" alt="Logo" />
+                </div>
+              </div>
+              <div className="otroRectangulo"></div>
+              <div className="rectanguloTransversal"></div>
+            </section>
+            <section className='item-1'>
+              <SideMenu
+                isOpen={!carouselVisible}
+                selectedItem={selectedItem}
+                onItemSelected={handleItemSelected}
+                setImageSelected={setImageSelected}// Pasamos la función que maneja la selección de elementos
+                setRightLogo={setRightLogo}
+              />
+            </section>
+          </>
+        )}
+      </div >
 
-    // </ThemeProvider>
+      <Modal
+        open={modalAbierto}
+        isOpen={setModalAbierto}
+
+      />
+    </div>
   );
 }
 
