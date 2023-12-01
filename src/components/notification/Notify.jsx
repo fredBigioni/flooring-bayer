@@ -2,13 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { HubConnection, HubConnectionBuilder } from "@microsoft/signalr";
 // import { Button, Input } from '@mui/material';
 import { Button, Input, notification } from "antd";
+import apiConfig from '../../config';
 
 export const Notify = () => {
   const [connection, setConnection] = useState(null);
   const [inputText, setInputText] = useState("");
-  const urlBase = 'https://home.solutica.com.ar:883/MapasBack/';
-  // const urlBase = 'https://localhost:5109/';
-  const urlBack = urlBase + 'api/';
+  const urlBase = apiConfig.urlBase;
+  const urlBack = apiConfig.urlBack;
   useEffect(() => {
     const connect = new HubConnectionBuilder()
       .withUrl(urlBase + "notification-hub")

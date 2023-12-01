@@ -168,12 +168,12 @@
 }
 
 #contenedorImages {
-  width: 80%;
-  height: 98%;
+  width: 98%;
+  /* height: 98%; */
   /* max-height: 550px; */
-  margin: 1% 0 0 10%;
-  overflow: hidden;
-  object-fit: contain;
+  margin: 1%;
+  /* overflow: hidden;
+  object-fit: contain; */
 }
 
 .rootContainerMapaGeneral {
@@ -525,3 +525,4 @@ footer a:link {
   width: 120px; /* Ajusta el ancho según tus necesidades */
   height: auto; /* Para mantener la proporción de la imagen */
 }
+

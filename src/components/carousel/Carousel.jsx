@@ -3,6 +3,7 @@ import { Button, Card, CardMedia, Grid, Typography } from '@mui/material';
 import LeftIcon from '@material-ui/icons/ChevronLeft';
 import RightIcon from '@material-ui/icons/ChevronRight';
 import { notification } from "antd";
+import apiConfig from '../../config';
 
 export const Carousel = () => {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -36,9 +37,8 @@ export const Carousel = () => {
     // }
     // getAllMediaImages();
   }, []);
-  const urlBase = 'https://home.solutica.com.ar:883/MapasBack/';
-  // const urlBase = 'https://localhost:5109/';
-  const urlBack = urlBase + 'api/';
+  const urlBase = apiConfig.urlBase;
+  const urlBack = apiConfig.urlBack;
 
   const getAllMedia = async () => {
     return new Promise(async (resolve, reject) => {

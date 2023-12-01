@@ -16,6 +16,7 @@ import { notification } from "antd";
 import apiConfig from './config';
 import Modal from './components/modal/Modal';
 import './index.css';
+import { InactivityRedirect } from './components/inactivityredirect';
 
 const App = () => {
   // Estado para almacenar la imagen seleccionada
@@ -485,7 +486,7 @@ const App = () => {
   const touchRef = useRef(null);
   const temporizadorRef = useRef(null);
   const [modalAbierto, setModalAbierto] = useState(false);
-
+  const [mapaGeneralSelected, setMapaGeneralSelected] = useState(false);
 
   const handleTouchStart = (event) => {
     const touch = event.touches[0];
@@ -517,12 +518,28 @@ const App = () => {
     setModalAbierto(false);
   };
 
+  const getStyle = () => {
+
+    if (imageSelected === '') {
+      return { width: '98%', margin: '1%' };
+    }
+
+    else if (imageSelected?.toLowerCase().includes('mapageneral')) {
+      return { width: '98%', margin: '1%' };
+    }
+
+    return { width: '80%', margin: '1% 1% 1% 14%' };
+  }
+
   const getLogo = () => {
-    
-    if (imageSelected === '')
+
+    if (imageSelected === '') {
       return 'logoImageInicial'
-    else if (imageSelected?.toLowerCase().includes('mapageneral'))
+    }
+
+    else if (imageSelected?.toLowerCase().includes('mapageneral')) {
       return 'logoImageInicial'
+    }
 
     return 'logoImage'
   }
@@ -544,8 +561,13 @@ const App = () => {
         )}
         {!carouselVisible && (
           <>
+            <InactivityRedirect
+              getBackToCarousel={setCarouselVisible}
+            />
             <section className="item-0">
-              <div id="contenedorImages" className='rootContainerMapaGeneral show'>
+              <div id="contenedorImages" className='rootContainerMapaGeneral show'
+                style={getStyle()}
+              >
                 <div className={rightLogo ? 'logoContainerDerecha' : 'logoContainerIzquierda'}>
                   <img className={getLogo()} src="./bayer.png" alt="Logo" />
                 </div>
